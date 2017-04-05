@@ -1,30 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKGL 2.0.5.2", "SKGL 2.0.5.2\SKGL 2.0.5.2.csproj", "{3E42C239-69E0-4420-8133-898FA2CF135A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialKeyGenerator", "SKGL 2.0.5.2\SerialKeyGenerator.csproj", "{3E42C239-69E0-4420-8133-898FA2CF135A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKGLTest", "SKGLTest\SKGLTest.csproj", "{8E165F9B-63DB-403F-823B-F45627075DAC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeedComparsison", "SpeedComparsison\SpeedComparsison.csproj", "{1C5DBDF4-4A0F-40B8-8210-C48BDB926490}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs18
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SKGL\u00202.0.5.2\\SKGL\u00202.0.5.2.csproj
-		SccProjectName1 = SKGL\u00202.0.5.2
-		SccLocalPath1 = SKGL\u00202.0.5.2
-		SccProjectUniqueName2 = SKGLTest\\SKGLTest.csproj
-		SccProjectName2 = SKGLTest
-		SccLocalPath2 = SKGLTest
-		SccProjectUniqueName3 = SpeedComparsison\\SpeedComparsison.csproj
-		SccProjectName3 = SpeedComparsison
-		SccLocalPath3 = SpeedComparsison
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

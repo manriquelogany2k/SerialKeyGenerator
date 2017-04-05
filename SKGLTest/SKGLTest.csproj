@@ -62,9 +62,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SKGL 2.0.5.2\SKGL 2.0.5.2.csproj">
+    <ProjectReference Include="..\SKGL 2.0.5.2\SerialKeyGenerator.csproj">
       <Project>{3e42c239-69e0-4420-8133-898fa2cf135a}</Project>
-      <Name>SKGL 2.0.5.2</Name>
+      <Name>SerialKeyGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

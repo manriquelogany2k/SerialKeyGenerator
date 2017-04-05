@@ -1,5 +1,5 @@
-# Serial Number Generator
+# Serial Key Number Generator
 
-This library generates serial numbers like XCEB-66QP-LMRT-92FJ fo example. 
+This library generates serial numbers like XCEZB-6B6QP-LMPRT-92EFJ for example. 
 
-It is a fork of [Serial Number Generator](http://sngenerator.codeplex.com/) by HaddadCSharp.
+It is a fork of [Serial Key Generating Library](http://skgl.codeplex.com/) by artemlos.
