@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 //Copyright (C) 2011-2012 Artem Los, www.clizware.net.
 //The author of this code shall get the credits
 
@@ -9,12 +10,9 @@
 // A great thank to Iberna (https://www.codeplex.com/site/users/view/lberna)
 // for getHardDiskSerial algorithm.
 
-using System.Text;
-using System.Security;
-
 
 [assembly: AllowPartiallyTrustedCallers]
-namespace SKGL
+namespace SerialKeyGenerator
 {
 
     public class Generate : BaseConfiguration
@@ -24,21 +22,22 @@ namespace SKGL
         private readonly SerialKeyConfiguration _configuration = new SerialKeyConfiguration();
         private readonly InternalCoreMethods _internalCoreMethods = new InternalCoreMethods();
         private readonly Random _random = new Random();
+        private string _secretPhase;
+
         public Generate()
         {
-            // No overloads works with Sub New
         }
+
         public Generate(SerialKeyConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        private string _secretPhase;
+
         /// <summary>
         /// If the key is to be encrypted, enter a password here.
         /// </summary>
-
-        public string secretPhase
+        public string SecretPhase
         {
             get { return _secretPhase; }
             set
@@ -49,14 +48,17 @@ namespace SKGL
                 }
             }
         }
+
+
         /// <summary>
         /// This function will generate a key.
         /// </summary>
         /// <param name="timeLeft">For instance, 30 days.</param>
-        public string doKey(int timeLeft)
+        public string DoKey(int timeLeft)
         {
-            return doKey(timeLeft, DateTime.Today); // removed extra argument false
+            return DoKey(timeLeft, DateTime.Today); // removed extra argument false
         }
+
 
         /// <summary>
         /// 
@@ -65,10 +67,11 @@ namespace SKGL
         /// <param name="useMachineCode">Lock a serial key to a specific machine, given its "machine code". Should be 5 digits long.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public object doKey(int timeLeft, int useMachineCode)
+        public object DoKey(int timeLeft, int useMachineCode)
         {
-            return doKey(timeLeft, DateTime.Today, useMachineCode);
+            return DoKey(timeLeft, DateTime.Today, useMachineCode);
         }
+
 
         /// <summary>
         /// This function will generate a key. You may also change the creation date.
@@ -76,7 +79,7 @@ namespace SKGL
         /// <param name="timeLeft">For instance, 30 days.</param>
         /// <param name="creationDate">Change the creation date of a key.</param>
         /// <param name="useMachineCode">Lock a serial key to a specific machine, given its "machine code". Should be 5 digits long.</param>
-        public string doKey(int timeLeft, System.DateTime creationDate, int useMachineCode = 0)
+        public string DoKey(int timeLeft, System.DateTime creationDate, int useMachineCode = 0)
         {
             if (timeLeft > 999)
             {
@@ -84,13 +87,13 @@ namespace SKGL
                 throw new ArgumentException("The timeLeft is larger than 999. It can only consist of three digits.");
             }
 
-            if (!string.IsNullOrEmpty(secretPhase) | secretPhase != null)
+            if (!string.IsNullOrEmpty(SecretPhase) | SecretPhase != null)
             {
                 //if some kind of value is assigned to the variable "secretPhase", the code will execute it FIRST.
                 //the secretPhase shall only consist of digits!
                 System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^\\d$");
                 //cheking the string
-                if (reg.IsMatch(secretPhase))
+                if (reg.IsMatch(SecretPhase))
                 {
                     //throwing new exception if the string contains non-numrical letters.
                     throw new ArgumentException("The secretPhase consist of non-numerical letters.");
@@ -101,12 +104,12 @@ namespace SKGL
             string _stageThree = null;
             if (useMachineCode > 0 & useMachineCode <= 99999)
             {
-                _stageThree = _internalCoreMethods.encrypt(timeLeft, _configuration.Features, secretPhase, useMachineCode, creationDate);
+                _stageThree = _internalCoreMethods.encrypt(timeLeft, _configuration.Features, SecretPhase, useMachineCode, creationDate);
                 // stage one
             }
             else
             {
-                _stageThree = _internalCoreMethods.encrypt(timeLeft, _configuration.Features, secretPhase, _random.Next(0, 99999), creationDate);
+                _stageThree = _internalCoreMethods.encrypt(timeLeft, _configuration.Features, SecretPhase, _random.Next(0, 99999), creationDate);
                 // stage one
             }
 

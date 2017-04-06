@@ -1,28 +1,34 @@
 using System;
 
-namespace SKGL
+namespace SerialKeyGenerator
 {
     public class Validate : BaseConfiguration
     {
         //this class have to be inherited because of the key which is shared with both encryption/decryption classes.
 
-        readonly SerialKeyConfiguration _configuration = new SerialKeyConfiguration();
-        readonly InternalCoreMethods _internalCoreMethods = new InternalCoreMethods();
+        private readonly SerialKeyConfiguration _configuration = new SerialKeyConfiguration();
+        private readonly InternalCoreMethods _internalCoreMethods = new InternalCoreMethods();
+        private string _res = "";
+        private string _secretPhase = "";
+
+
         public Validate()
         {
-            // No overloads works with Sub New
         }
+
         public Validate(SerialKeyConfiguration configuration)
         {
             _configuration = configuration;
         }
+        
+        
         /// <summary>
         /// Enter a key here before validating.
         /// </summary>
         public override string Key
         {
             //re-defining the Key
-            get { return _key; }
+            get => _key;
             set
             {
                 _res = "";
@@ -30,11 +36,11 @@ namespace SKGL
             }
         }
 
-        private string _secretPhase = "";
+        
         /// <summary>
-        /// If the key has been encrypted, when it was generated, please set the same secretPhase here.
+        /// If the key has been encrypted, when it was generated, please set the same SecretPhase here.
         /// </summary>
-        public string secretPhase
+        public string SecretPhase
         {
             get { return _secretPhase; }
             set
@@ -45,9 +51,76 @@ namespace SKGL
                 }
             }
         }
+        
+        
+        /// <summary>
+        /// Checks whether the key has been modified or not. If the key has been modified - returns false; if the key has not been modified - returns true.
+        /// </summary>
+        public bool IsValid => isValid();
+
+        
+        /// <summary>
+        /// If the key has expired - returns true; if the key has not expired - returns false.
+        /// </summary>
+        public bool IsExpired => isExpired();
+
+        
 
 
-        private string _res = "";
+        /// <summary>
+        /// Returns the creation date of the key.
+        /// </summary>
+        public DateTime CreationDate => creationDate();
+
+        private int _DaysLeft()
+        {
+            decodeKeyToString();
+            var _setDays = SetTime;
+            return Convert.ToInt32(((TimeSpan)(ExpireDate - DateTime.Today)).TotalDays); //or viseversa
+        }
+        /// <summary>
+        /// Returns the amount of days the key will be valid.
+        /// </summary>
+        public int DaysLeft => _DaysLeft();
+
+        
+        /// <summary>
+        /// Returns the actual amount of days that were set when the key was generated.
+        /// </summary>
+        public int SetTime => getAmountOfDayThatWereSetWhenKeyWasGenerated();
+
+
+        /// <summary>
+        /// Returns the date when the key is to be expired.
+        /// </summary>
+        public DateTime ExpireDate => getExpireDate();
+        
+        
+        /// <summary>
+        /// Returns all 8 features in a boolean array
+        /// </summary>
+        public bool[] Features => getFeatures();
+
+
+        /// <summary>
+        /// If the current machine's machine code is equal to the one that this key is designed for, return true.
+        /// </summary>
+        /// <value></value>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        public bool IsOnRightMachine
+        {
+            get
+            {
+                var decodedMachineCode = Convert.ToInt32(_res.Substring(23, 5));
+                return decodedMachineCode == MachineCode;
+            }
+        }
+
+
+
+
+
 
         private void decodeKeyToString()
         {
@@ -55,7 +128,7 @@ namespace SKGL
             if (string.IsNullOrEmpty(_res) | _res == null)
             {
 
-                string _stageOne = "";
+                var _stageOne = "";
 
                 Key = Key.Replace("-", "");
 
@@ -64,30 +137,28 @@ namespace SKGL
 
                 _stageOne = Key;
 
-
-                _stageOne = Key;
-
                 // _stageTwo = _a._decode(_stageOne)
 
-                if (!string.IsNullOrEmpty(secretPhase) | secretPhase != null)
+                if (!string.IsNullOrEmpty(SecretPhase) | SecretPhase != null)
                 {
                     //if no value "secretPhase" given, the code will directly decrypt without using somekind of encryption
                     //if some kind of value is assigned to the variable "secretPhase", the code will execute it FIRST.
                     //the secretPhase shall only consist of digits!
-                    System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^\\d$");
+                    var reg = new System.Text.RegularExpressions.Regex("^\\d$");
                     //cheking the string
-                    if (reg.IsMatch(secretPhase))
+                    if (reg.IsMatch(SecretPhase))
                     {
                         //throwing new exception if the string contains non-numrical letters.
                         throw new ArgumentException("The secretPhase consist of non-numerical letters.");
                     }
                 }
-                _res = _internalCoreMethods.decrypt(_stageOne, secretPhase);
+                _res = _internalCoreMethods.decrypt(_stageOne, SecretPhase);
 
 
             }
         }
-        private bool _IsValid()
+
+        private bool isValid()
         {
             //Dim _a As New methods ' is only here to provide the geteighthashcode method
             try
@@ -108,8 +179,8 @@ namespace SKGL
                 }
                 decodeKeyToString();
 
-                string _decodedHash = _res.Substring(0, 9);
-                string _calculatedHash = _internalCoreMethods.getEightByteHash(_res.Substring(9, 19)).ToString().Substring(0, 9);
+                var _decodedHash = _res.Substring(0, 9);
+                var _calculatedHash = _internalCoreMethods.getEightByteHash(_res.Substring(9, 19)).ToString().Substring(0, 9);
                 // changed Math.Abs(_res.Substring(0, 17).GetHashCode).ToString.Substring(0, 8)
 
                 //When the hashcode is calculated, it cannot be taken for sure, 
@@ -132,14 +203,8 @@ namespace SKGL
                 return false;
             }
         }
-        /// <summary>
-        /// Checks whether the key has been modified or not. If the key has been modified - returns false; if the key has not been modified - returns true.
-        /// </summary>
-        public bool IsValid
-        {
-            get { return _IsValid(); }
-        }
-        private bool _IsExpired()
+
+        private bool isExpired()
         {
             if (DaysLeft > 0)
             {
@@ -150,97 +215,34 @@ namespace SKGL
                 return true;
             }
         }
-        /// <summary>
-        /// If the key has expired - returns true; if the key has not expired - returns false.
-        /// </summary>
-        public bool IsExpired
-        {
-            get { return _IsExpired(); }
-        }
-        private System.DateTime _CreationDay()
+
+        private DateTime creationDate()
         {
             decodeKeyToString();
-            System.DateTime _date = new System.DateTime();
+            var _date = new DateTime();
             _date = new DateTime(Convert.ToInt32(_res.Substring(9, 4)), Convert.ToInt32(_res.Substring(13, 2)), Convert.ToInt32(_res.Substring(15, 2)));
 
             return _date;
         }
-        /// <summary>
-        /// Returns the creation date of the key.
-        /// </summary>
-        public System.DateTime CreationDate
-        {
-            get { return _CreationDay(); }
-        }
-        private int _DaysLeft()
-        {
-            decodeKeyToString();
-            int _setDays = SetTime;
-            return Convert.ToInt32(((TimeSpan)(ExpireDate - DateTime.Today)).TotalDays); //or viseversa
-        }
-        /// <summary>
-        /// Returns the amount of days the key will be valid.
-        /// </summary>
-        public int DaysLeft
-        {
-            get { return _DaysLeft(); }
-        }
 
-        private int _SetTime()
+        private int getAmountOfDayThatWereSetWhenKeyWasGenerated()
         {
             decodeKeyToString();
             return Convert.ToInt32(_res.Substring(17, 3));
         }
-        /// <summary>
-        /// Returns the actual amount of days that were set when the key was generated.
-        /// </summary>
-        public int SetTime
-        {
-            get { return _SetTime(); }
-        }
-        private System.DateTime _ExpireDate()
-        {
-            decodeKeyToString();
-            System.DateTime _date = new System.DateTime();
-            _date = CreationDate;
-            return _date.AddDays(SetTime);
-        }
-        /// <summary>
-        /// Returns the date when the key is to be expired.
-        /// </summary>
-        public System.DateTime ExpireDate
-        {
-            get { return _ExpireDate(); }
-        }
-        private bool[] _Features()
+
+        private bool[] getFeatures()
         {
             decodeKeyToString();
             return _internalCoreMethods.intToBoolean(Convert.ToInt32(_res.Substring(20, 3)));
         }
-        /// <summary>
-        /// Returns all 8 features in a boolean array
-        /// </summary>
-        public bool[] Features
-        {
-            //we already have defined Features in the BaseConfiguration class. 
-            //Here we only change it to Read Only.
-            get { return _Features(); }
-        }
 
-        /// <summary>
-        /// If the current machine's machine code is equal to the one that this key is designed for, return true.
-        /// </summary>
-        /// <value></value>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public bool IsOnRightMachine
+        private DateTime getExpireDate()
         {
-            get
-            {
-                int decodedMachineCode = Convert.ToInt32(_res.Substring(23, 5));
-
-                return decodedMachineCode == MachineCode;
-            }
+            decodeKeyToString();
+            var _date = new DateTime();
+            _date = CreationDate;
+            return _date.AddDays(SetTime);
         }
     }
 }

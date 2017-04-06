@@ -1,4 +1,4 @@
-namespace SKGL
+namespace SerialKeyGenerator
 {
     public class SerialKeyConfiguration : BaseConfiguration
     {
@@ -19,17 +19,16 @@ namespace SKGL
 
         public virtual bool[] Features
         {
-            //will be changed in validating class.
-            get { return _features; }
-            set { _features = value; }
+            get => _features;
+            set => _features = value;
         }
         private bool _addSplitChar = true;
 
 
         public bool AddSplitChar
         {
-            get { return _addSplitChar; }
-            set { _addSplitChar = value; }
+            get => _addSplitChar;
+            set => _addSplitChar = value;
         }
 
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace SKGL
+namespace SerialKeyGenerator
 {
     internal class InternalCoreMethods : SerialKeyConfiguration
     {

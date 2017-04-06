@@ -2,7 +2,7 @@ using System;
 using System.Management;
 using System.Security;
 
-namespace SKGL
+namespace SerialKeyGenerator
 {
     public abstract class BaseConfiguration
     {

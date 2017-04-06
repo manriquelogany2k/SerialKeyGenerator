@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SerialKeyGenerator;
 
 namespace SKGLTest
 {
@@ -9,17 +10,17 @@ namespace SKGLTest
         [TestMethod]
         public void MachineCodeTest()
         {
-            SKGL.Generate gen = new SKGL.Generate();
+            Generate gen = new Generate();
             string a= gen.MachineCode.ToString();
         }
 
         [TestMethod]
         public void CreateAndValidateSimple()
         {
-            SKGL.Generate gen = new SKGL.Generate();
-            string a  = gen.doKey(30);
+            Generate gen = new Generate();
+            string a  = gen.DoKey(30);
 
-            SKGL.Validate val = new SKGL.Validate();
+            Validate val = new Validate();
 
             val.Key = a;
             
@@ -32,10 +33,10 @@ namespace SKGLTest
         public void CreateAndValidateA()
         {
 
-            SKGL.Validate val = new SKGL.Validate();
+            Validate val = new Validate();
 
             val.Key = "MXNBF-ITLDZ-WPOBY-UCHQW";
-            val.secretPhase = "567";
+            val.SecretPhase = "567";
 
             Assert.IsTrue(val.IsValid == true);
             Assert.IsTrue(val.IsExpired == true);
@@ -45,18 +46,18 @@ namespace SKGLTest
         [TestMethod]
         public void CreateAndValidateC()
         {
-            SKGL.SerialKeyConfiguration skm = new SKGL.SerialKeyConfiguration();
+            SerialKeyConfiguration skm = new SerialKeyConfiguration();
 
-            SKGL.Generate gen = new SKGL.Generate(skm);
+            Generate gen = new Generate(skm);
             skm.Features[0] = true;
-            gen.secretPhase = "567";
-            string a = gen.doKey(37);
+            gen.SecretPhase = "567";
+            string a = gen.DoKey(37);
 
 
-            SKGL.Validate val = new SKGL.Validate();
+            Validate val = new Validate();
 
             val.Key = a;
-            val.secretPhase = "567";
+            val.SecretPhase = "567";
 
             Assert.IsTrue(val.IsValid == true);
             Assert.IsTrue(val.IsExpired == false);
@@ -72,10 +73,10 @@ namespace SKGLTest
         {
 
 
-            SKGL.Validate val = new SKGL.Validate();
+            Validate val = new Validate();
 
             val.Key = "LZWXQ-SMBAS-JDVDL-XTEHB";
-            val.secretPhase = "567";
+            val.SecretPhase = "567";
 
             int timeLeft = val.DaysLeft;
 
@@ -90,10 +91,10 @@ namespace SKGLTest
         [TestMethod]
         public void CreateAndValidateAM()
         {
-            SKGL.Generate gen = new SKGL.Generate();
-            string a = gen.doKey(30);
+            Generate gen = new Generate();
+            string a = gen.DoKey(30);
 
-            SKGL.Validate ValidateAKey = new SKGL.Validate();
+            Validate ValidateAKey = new Validate();
 
             ValidateAKey.Key = a;
 
